@@ -1,0 +1,16 @@
+version: '3.1'
+name: board
+services:
+  mysql:
+    image: mysql:8
+    container_name: board-db
+    command: --default-authentication-plugin=mysql_native_password --lower_case_table_names=1
+    restart: unless-stopped
+    ports:
+      - '3306:3306'
+    environment:
+      TZ: UTC
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: board
