@@ -1,32 +1,36 @@
-import { Body, Controller, Get, Post, Request } from '@nestjs/common';
-import { ApiPermissionPublic } from 'src/auth/auth.guard';
+import { Body, Controller, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
+import { JwtAuthGuard, PrivateApi, PublicApi } from 'src/auth/auth.guard';
 import { User } from 'src/entities/user.entity';
-import { Userdto } from './dto/user.dto';
+import { UserSignDto } from './dto/userSign.dto';
 import { UserService } from './user.service';
 
+@PublicApi()
 @Controller('user')
 export class UserController {
     
     constructor(private readonly userService: UserService) { }
+
+    @Get()
+    @PrivateApi()
+    getAllUsers(): Promise<[User[], number]> {
+        return this.userService.getAllUsers();
+    }
     
+    @Get(':id')
+    @PrivateApi()
+    getUser(@Param('id') id: number): Promise<User> {
+        return this.userService.getUser(id)
+    }
+
     @Post('signup')
-    @ApiPermissionPublic()
-    signup(@Body() dto: Userdto): Promise<User> {
+    signup(@Body() dto: UserSignDto): Promise<User> {
         const { username, password } = dto
         return this.userService.signup(username, password)
     }
     @Post('signin')
-    @ApiPermissionPublic()
-    signin(@Body() dto: Userdto): Promise<{ accessToken: string }> {
+    signin(@Body() dto: UserSignDto): Promise<{ accessToken: string }> {
         const { username, password } = dto
         return this.userService.signin(username, password);
-    }
-    
-    @Get('verify')
-    verify(@Request() req: Request): void {
-        console.log(req.headers['authorization']);
-        
-        // this.userService.verify(req);
     }
 
 }

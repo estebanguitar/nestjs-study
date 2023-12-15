@@ -7,7 +7,7 @@ import { User } from "src/entities/user.entity";
 import { IsNull, Repository } from "typeorm";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy)  {
+export class JwtStrategy extends PassportStrategy(Strategy) {
 
     constructor(@InjectRepository(User) private readonly repository: Repository<User>) {
         super({
@@ -16,15 +16,16 @@ export class JwtStrategy extends PassportStrategy(Strategy)  {
         })
     }
 
-    async validate(payload: { username: string, timestamp: Date }): Promise<User> {
+    async validate(payload: { id: number, username: string, timestamp: Date }): Promise<User> {
         const user = await this.repository.findOne({
             where: {
-                username: payload.username,
+                id: payload.id,
+                // username: payload.username,
                 deletedAt: IsNull()
             }
         })
 
-        if(user === null) throw new UnauthorizedException();
+        if (user === null) throw new UnauthorizedException();
 
         return user;
     }

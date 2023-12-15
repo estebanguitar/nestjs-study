@@ -1,5 +1,6 @@
+import { User } from "src/entities/user.entity"
+
 export class UpdateBoardDto {
-    id: number
     title: string
     content: string
 }

@@ -1,50 +1,26 @@
-import { CanActivate, ExecutionContext, Injectable, SetMetadata } from "@nestjs/common";
+import { ExecutionContext, Injectable, SetMetadata } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
-import { JwtService } from "@nestjs/jwt";
 import { AuthGuard } from "@nestjs/passport";
-import { isEmpty } from "class-validator";
-import { ContextService } from "src/util/context.util";
+import { Observable } from "rxjs";
 
 const IS_PUBLIC_API = 'isPublicApi'
-export type PermissionInfo = {
-    isPublic: boolean
-}
-
-export const ApiPermission = (permissionInfo: PermissionInfo) => SetMetadata(IS_PUBLIC_API, permissionInfo)
-export const ApiPermissionPublic = () => ApiPermission({ isPublic: true })
-// export const ApiPermissionNotPublic = () => ApiPermission({ isPublic: false })
-// export const PublicApi = (isPublicApi: PermissionInfo = { isPublic: false }) => ApiPermission(isPublicApi)
+export const PublicApi = () => SetMetadata(IS_PUBLIC_API, true)
+export const PrivateApi = () => SetMetadata(IS_PUBLIC_API, false)
 
 @Injectable()
-// export class AuthGuard implements CanActivate {
 export class JwtAuthGuard extends AuthGuard('jwt') {
-    // constructor(
-    //     private readonly reflector: Reflector,
-    //     // private readonly jwtService: JwtService
-    // ) { }
+    constructor(private readonly reflector: Reflector) { super() }
 
-    // canActivate(context: ExecutionContext): boolean {
-    //     const permissionInfo = this.reflector.get(IS_PUBLIC_API, context.getHandler());
+    canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
+        const permissionInfo = this.reflector.getAllAndOverride(IS_PUBLIC_API, [context.getHandler(), context.getClass()]) ?? false;
 
-    //     console.log(permissionInfo?.isPublic);
-        
+        if(permissionInfo)
+            return true
 
-    //     if(!permissionInfo?.isPublic)
-    //         return true;
-
-
-
-    //     const token = ContextService.getRequest(context).headers.authorization
-    //     // console.log(token);
-    //     // this.jwtService.verify(token)
-    //     console.log(isEmpty(token), token);
-        
-    //     if(!isEmpty(token))
-    //         token    
-
-    //     return true
+        return super.canActivate(context);
+    }
+    
+    // handleRequest<TUser = any>(err: any, user: any, info: any, context: ExecutionContext, status?: any): TUser {
+    //     return user
     // }
-
-
-
 }

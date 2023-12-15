@@ -1,19 +1,36 @@
 import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
+import { log } from 'console';
 import { User } from 'src/entities/user.entity';
 import { aesDecrypt, aesEncrypt } from 'src/util/aesCrypto.util';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 
 @Injectable()
 export class UserService {
-    verify() {
-        
-    }
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService
     ) { }
+
+
+    async getUser(id: number): Promise<User> {
+        const user = await this.userRepository.findOne({
+            where: { id, deletedAt: IsNull() },
+            // relations: ['boards']
+        })
+
+        if (user === null) {
+            throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+        }
+
+        return user
+    }
+    async getAllUsers(): Promise<[User[], number]> {
+        return await this.userRepository.findAndCount({
+            where: { deletedAt: IsNull() }
+        })
+    }
 
     async signup(username: string, password: string): Promise<User> {
         const user = await this.userRepository.findOne({
@@ -24,7 +41,7 @@ export class UserService {
 
         if (user !== null)
             throw new HttpException('Already Exist username', HttpStatus.BAD_REQUEST)
-        
+
         return await this.userRepository.save(
             this.userRepository.create({
                 username,
@@ -46,6 +63,7 @@ export class UserService {
         const now = new Date().getTime()
 
         const payload = {
+            id: user.id,
             username: user.username,
             timestamp: now
         }
