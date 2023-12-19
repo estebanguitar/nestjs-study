@@ -1,11 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Put, Request } from '@nestjs/common';
-import { ReplyService } from './reply.service';
 import { Reply } from 'src/entities/reply.entity';
+import { ReplyService } from './reply.service';
 
 @Controller('reply')
 export class ReplyController {
 
-    constructor(private readonly replyService: ReplyService) {}
+    constructor(private readonly replyService: ReplyService) { }
 
     @Get()
     reply(): Promise<Reply[]> {

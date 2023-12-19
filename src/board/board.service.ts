@@ -1,12 +1,11 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { log } from 'console';
+import { isNotEmpty } from 'class-validator';
 import { User } from 'src/entities/user.entity';
 import { IsNull, Repository } from 'typeorm';
 import { Board } from '../entities/board.entity';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
-import { isNotEmpty } from 'class-validator';
 
 @Injectable()
 export class BoardService {
@@ -69,7 +68,8 @@ export class BoardService {
     const board = await this.repository.findOne({
       where: {
         id,
-        userId: user.id
+        userId: user.id,
+        deletedAt: IsNull()
       }
     });
 
@@ -88,7 +88,9 @@ export class BoardService {
       .addSelect('board.created_at', 'createdAt')
       .addSelect('user.id', 'userId')
       .addSelect('user.username', 'username')
+      .addSelect('replies.content','repliyContent')
       .innerJoin(User, 'user', 'user.id = board.userId')
+      // .leftJoin('board.replies','replies', 'replies.userId = user.id')
       .where('1 = 1');
 
     if (isNotEmpty(id))

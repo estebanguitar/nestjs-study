@@ -1,27 +1,19 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
-import { TypeOrmModule } from '@nestjs/typeorm';
 import { JwtAuthGuard } from './auth/auth.guard';
 import { BoardModule } from './board/board.module';
-import { UserModule } from './user/user.module';
+import { ConfigModuleContainer, DBModuleContainer, JwtModuleContainer } from './config/module.container';
 import { ReplyModule } from './reply/reply.module';
-
-const typeOrmModule = TypeOrmModule.forRoot({
-  type: 'mysql',
-  host: 'localhost',
-  port: 3306,
-  username: 'user',
-  password: 'password',
-  database: 'board',
-  synchronize: false,
-  logging: true,
-  entities: [`${__dirname}/**/entities/*.entity.{js,ts}`]
-})
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    typeOrmModule,
-    BoardModule, UserModule, ReplyModule
+    ConfigModuleContainer.forRoot(),
+    DBModuleContainer.forRoot(__dirname),
+    JwtModuleContainer.register(),
+    BoardModule, 
+    UserModule, 
+    ReplyModule
   ],
   controllers: [],
   providers: [

@@ -1,7 +1,5 @@
 import { ExecutionContext, HttpStatus } from "@nestjs/common";
-import { log } from "console";
 import { CookieOptions } from "express";
-import { User } from "src/entities/user.entity";
 
 type Headers = {
     'content-type': string,
@@ -14,7 +12,7 @@ type Headers = {
     'connection': string,
     'content-length': string,
 }
-type RequsetUser = {
+type RequsetUser = Request & {
     userId: number,
     token: string,
 }
@@ -25,7 +23,7 @@ type FilteredRequest = RequsetUser & {
     cookies: any
 }
 
-type FilteredResponse = {
+type FilteredResponse = Response & {
     cookie(name: string, value: string, options: CookieOptions): any
     cookie(name: string, value: any, options?: CookieOptions): any
     header(field: string, value?: string | string[]): any,
@@ -33,15 +31,11 @@ type FilteredResponse = {
 }
 
 export class ContextService {
-    
+
     static getRequest = (context: ExecutionContext): FilteredRequest => {
         return context.switchToHttp().getRequest<FilteredRequest>()
-    } 
+    }
     static getResponse = (contenxt: ExecutionContext) => {
         return contenxt.switchToHttp().getResponse<FilteredResponse>()
-    }   
-
-    static setUser = (context: ExecutionContext) => {
-        // context.switchToHttp().getRequest<FilteredRequest>().userId
     }
 }

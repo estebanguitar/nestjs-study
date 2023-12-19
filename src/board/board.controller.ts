@@ -1,17 +1,15 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request } from '@nestjs/common';
+import { PublicApi } from 'src/auth/auth.guard';
+import { Board } from '../entities/board.entity';
 import { BoardService } from './board.service';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { UpdateBoardDto } from './dto/update-board.dto';
-import { Board } from '../entities/board.entity';
-import { User } from 'src/entities/user.entity';
-import { log } from 'console';
-import { PublicApi } from 'src/auth/auth.guard';
 
 
 @Controller('board')
 export class BoardController {
   constructor(private readonly service: BoardService) { }
-  
+
   @Get()
   getBoards(): Promise<Board[]> {
     return this.service.getBoards();

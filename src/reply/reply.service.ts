@@ -1,5 +1,4 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { repl } from '@nestjs/core';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Reply } from 'src/entities/reply.entity';
 import { User } from 'src/entities/user.entity';
@@ -28,7 +27,7 @@ export class ReplyService {
             relations: ['board', 'user']
         });
 
-        if(reply === null)
+        if (reply === null)
             throw new NotFoundException()
 
         return reply
@@ -65,7 +64,7 @@ export class ReplyService {
             }
         })
 
-        if(reply === null)
+        if (reply === null)
             throw new NotFoundException()
 
         reply.deletedAt = new Date()

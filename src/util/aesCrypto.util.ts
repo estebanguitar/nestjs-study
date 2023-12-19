@@ -16,7 +16,7 @@ export const aesEncrypt = (plainText: string): string => {
         return encrypted.toString(AES_OUTPUT_ENCODING)
     } catch (e) {
         console.error(e)
-    //   throw new InternalError('Blockchain key encrypt error', ErrorCode.int.encrypt.ENCRYPTION_ERROR, {}, e)
+        //   throw new InternalError('Blockchain key encrypt error', ErrorCode.int.encrypt.ENCRYPTION_ERROR, {}, e)
     }
 }
 
