@@ -5,6 +5,7 @@ import { BoardModule } from './board/board.module';
 import { ConfigModuleContainer, DBModuleContainer, JwtModuleContainer } from './config/module.container';
 import { ReplyModule } from './reply/reply.module';
 import { UserModule } from './user/user.module';
+import { FileModule } from './file/file.module';
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { UserModule } from './user/user.module';
     JwtModuleContainer.register(),
     BoardModule, 
     UserModule, 
-    ReplyModule
+    ReplyModule, FileModule
   ],
   controllers: [],
   providers: [
