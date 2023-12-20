@@ -3,4 +3,3 @@
 // export const isNull = (value: any) => value === null
 // export const isNotNull = (value: any) => value !== null
 // export const isArray = (value: any) => Array.isArray(value)
-

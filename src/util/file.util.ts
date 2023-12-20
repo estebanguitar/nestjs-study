@@ -1,6 +1,3 @@
-export class FileUploadUtil {
+export class FileUploadUtil {}
 
-}
-
-export class FileDownloadUtil {
-}
+export class FileDownloadUtil {}

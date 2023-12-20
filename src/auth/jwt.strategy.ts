@@ -1,37 +1,39 @@
-import { Injectable, UnauthorizedException } from "@nestjs/common";
-import { PassportStrategy } from "@nestjs/passport";
-import { InjectRepository } from "@nestjs/typeorm";
-import { log } from "console";
-import { ExtractJwt, Strategy } from "passport-jwt";
-// import { JWT_SECRET } from "src/config/env";
-import { User } from "src/entities/user.entity";
-import { IsNull, Repository } from "typeorm";
+import { Injectable, UnauthorizedException } from '@nestjs/common'
+import { PassportStrategy } from '@nestjs/passport'
+import { InjectRepository } from '@nestjs/typeorm'
+import { ExtractJwt, Strategy } from 'passport-jwt'
+import { User } from 'src/entities/user.entity'
+import { IsNull, Repository } from 'typeorm'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(
+    @InjectRepository(User) private readonly repository: Repository<User>,
+  ) {
+    super({
+      secretOrKey: process.env.ACCESS_JWT_SECRET,
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+    })
+  }
 
-    constructor(@InjectRepository(User) private readonly repository: Repository<User>) {
-        super({
-            secretOrKey: process.env.ACCESS_JWT_SECRET,
-            jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-        })
-    }
+  async validate(payload: {
+    id: number
+    username: string
+    timestamp: Date
+  }): Promise<User> {
+    const user = await this.repository.findOne({
+      where: {
+        id: payload.id,
+        // username: payload.username,
+        deletedAt: IsNull(),
+      },
+    })
 
-    async validate(payload: { id: number, username: string, timestamp: Date }): Promise<User> {
-        const user = await this.repository.findOne({
-            where: {
-                id: payload.id,
-                // username: payload.username,
-                deletedAt: IsNull()
-            }
-        })
+    if (user === null) throw new UnauthorizedException()
 
-        if (user === null) throw new UnauthorizedException();
-
-        return user;
-    }
+    return user
+  }
 }
-
 
 // @Injectable()
 // export class JwtRefreshStrategy extends PassportStrategy(Strategy) {

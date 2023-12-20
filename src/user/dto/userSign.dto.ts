@@ -1,4 +1,4 @@
 export class UserSignDto {
-    username: string
-    password: string
+  username: string
+  password: string
 }
