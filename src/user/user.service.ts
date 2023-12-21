@@ -21,7 +21,7 @@ export class UserService {
   async getUser(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id, deletedAt: IsNull() },
-      // relations: ['boards']
+      relations: ['boards', 'replies´'],
     })
 
     if (user === null) {
