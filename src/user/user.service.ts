@@ -6,7 +6,6 @@ import { JwtVerify, Tokens } from 'src/config/config.type'
 import { User } from 'src/entities/user.entity'
 import { IsNull, Repository } from 'typeorm'
 import * as process from 'process'
-import { aesDecrypt, aesEncrypt } from '../util/aesCrypto.util'
 import { EncryptFactory } from '../util/crypto.util'
 
 @Injectable()
@@ -32,6 +31,7 @@ export class UserService {
 
     return user
   }
+
   async getAllUsers(): Promise<[User[], number]> {
     return await this.userRepository.findAndCount({
       where: { deletedAt: IsNull() },
@@ -50,11 +50,12 @@ export class UserService {
     return await this.userRepository.save(
       this.userRepository.create({
         username,
-        password: aesEncrypt(password),
+        password: this.cryptoUtil.encrypt(password),
         createdAt: new Date(),
       }),
     )
   }
+
   async signin(username: string, password: string): Promise<Tokens> {
     const user = await this.userRepository.findOne({
       where: {
@@ -62,7 +63,7 @@ export class UserService {
       },
     })
 
-    if (user === null || aesDecrypt(user?.password) !== password) throw new UnauthorizedException()
+    if (user === null || this.cryptoUtil.decrypt(user?.password) !== password) throw new UnauthorizedException()
 
     const now = new Date().getTime()
 
@@ -104,6 +105,7 @@ export class UserService {
       algorithm: 'HS256',
     })
   }
+
   private issueRefreshToken(payload: JwtVerify): string {
     return this.jwtService.sign(payload, {
       algorithm: 'HS256',

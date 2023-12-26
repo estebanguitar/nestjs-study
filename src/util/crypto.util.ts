@@ -25,29 +25,19 @@ type EncryptOptions = {
 type EncType = 'NAME' | 'PASSWORD' | 'RRN' | 'TEL' | 'PHONE' | 'EMAIL' | 'DATE'
 
 class Encrypt {
-  private readonly keyHashAlgorithm: HashAlgorithms
-  private readonly algorithm: Algorithms
-  private readonly ivSize: number
-  private readonly outputEncoding: 'base64' | 'hex' | 'utf8'
-
-  constructor(options: EncryptOptions) {
-    this.keyHashAlgorithm = options.keyHashAlgorithm
-    this.algorithm = options.algorithm
-    this.ivSize = options.ivSize
-    this.outputEncoding = options.outputEncoding
-  }
+  constructor(private readonly options: EncryptOptions) {}
 
   encrypt(plainText: string, password?: string): string {
     try {
-      const keyHash = crypto.createHash(this.keyHashAlgorithm)
+      const keyHash = crypto.createHash(this.options.keyHashAlgorithm)
       if (password !== undefined) keyHash.update(password)
 
-      const iv = crypto.randomBytes(this.ivSize)
-      const cipher = crypto.createCipheriv(this.algorithm, keyHash.digest(), iv)
+      const iv = crypto.randomBytes(this.options.ivSize)
+      const cipher = crypto.createCipheriv(this.options.algorithm, keyHash.digest(), iv)
       const cipherText = cipher.update(Buffer.from(plainText))
       const cipherFinal = cipher.final()
       const encrypted = Buffer.concat([iv, cipherText, cipherFinal])
-      return encrypted.toString(this.outputEncoding)
+      return encrypted.toString(this.options.outputEncoding)
     } catch (e) {
       console.error(e)
     }
@@ -55,13 +45,13 @@ class Encrypt {
 
   decrypt(encText: string, password?: string): string {
     try {
-      const encryptedBuffer = Buffer.from(encText, this.outputEncoding)
-      const keyHash = crypto.createHash(this.keyHashAlgorithm)
+      const encryptedBuffer = Buffer.from(encText, this.options.outputEncoding)
+      const keyHash = crypto.createHash(this.options.keyHashAlgorithm)
       if (password !== undefined) keyHash.update(password)
 
-      const iv = encryptedBuffer.subarray(0, this.ivSize)
-      const rest = encryptedBuffer.subarray(this.ivSize)
-      const decipher = crypto.createDecipheriv(this.algorithm, keyHash.digest(), iv)
+      const iv = encryptedBuffer.subarray(0, this.options.ivSize)
+      const rest = encryptedBuffer.subarray(this.options.ivSize)
+      const decipher = crypto.createDecipheriv(this.options.algorithm, keyHash.digest(), iv)
       const plainText = decipher.update(rest)
       const plainFinal = decipher.final()
       const decrypted = Buffer.concat([plainText, plainFinal])

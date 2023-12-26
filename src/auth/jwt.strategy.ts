@@ -14,20 +14,21 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate(payload: { id: number; username: string; timestamp: Date }): Promise<User> {
-    const user = await this.repository.findOne({
-      where: {
-        id: payload.id,
-        // username: payload.username,
-        deletedAt: IsNull(),
-      },
-    })
+    async validate(payload: { id: number, username: string, timestamp: Date }): Promise<User> {
+        const user = await this.repository.findOne({
+            where: {
+                id: payload.id,
+                // username: payload.username,
+                deletedAt: IsNull()
+            }
+        })
 
-    if (user === null) throw new UnauthorizedException()
+        if (user === null) throw new UnauthorizedException();
 
-    return user
-  }
+        return user;
+    }
 }
+
 
 // @Injectable()
 // export class JwtRefreshStrategy extends PassportStrategy(Strategy) {
