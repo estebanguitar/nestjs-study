@@ -29,46 +29,23 @@ export class FileController {
 
   @Get(':id')
   getFile(@Param('id') id: string): string {
-<<<<<<< Updated upstream
-=======
     console.log(id)
->>>>>>> Stashed changes
     return null
   }
 
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   uploadFile(@UploadedFile() file: Express.Multer.File): string {
-<<<<<<< Updated upstream
-    console.log(
-      '🚀 ~ file: file.controller.ts:23 ~ FileController ~ uploadFile ~ file:',
-      file,
-    )
-=======
     console.log('🚀 ~ file: file.controller.ts:23 ~ FileController ~ uploadFile ~ file:', file)
->>>>>>> Stashed changes
     return null
   }
 
   @Post('upload/multiple')
   @UseInterceptors(FilesInterceptor('file'))
-<<<<<<< Updated upstream
-  uploadMultipleFiles(
-    @UploadedFiles() files: Array<Express.Multer.File>,
-  ): string {
-    files.forEach((element) => {
-      console.log(
-        '🚀 ~ file: file.controller.ts:33 ~ FileController ~ uploadMultipleFiles ~ element:',
-        element,
-      )
-    })
-    // console.log("🚀 ~ file: file.controller.ts:32 ~ FileController ~ uploadMultipleFiles ~ files:", files)
-=======
   uploadMultipleFiles(@UploadedFiles() files: Array<Express.Multer.File>): string {
     files.forEach((element) => {
       console.log('🚀 ~ file: file.controller.ts:33 ~ FileController ~ uploadMultipleFiles ~ element:', element)
     })
->>>>>>> Stashed changes
     return null
   }
 
@@ -85,14 +62,7 @@ export class FileController {
     )
     file: Express.Multer.File,
   ): string {
-<<<<<<< Updated upstream
-    console.log(
-      '🚀 ~ file: file.controller.ts:43 ~ FileController ~ uploadImage ~ file:',
-      file,
-    )
-=======
     console.log('🚀 ~ file: file.controller.ts:43 ~ FileController ~ uploadImage ~ file:', file)
->>>>>>> Stashed changes
     return null
   }
 

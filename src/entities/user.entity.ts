@@ -1,14 +1,4 @@
-<<<<<<< Updated upstream
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-} from 'typeorm'
-=======
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm'
->>>>>>> Stashed changes
 import { Board } from './board.entity'
 import { Reply } from './reply.entity'
 
@@ -23,16 +13,7 @@ export class User extends BaseEntity {
   @Column({ type: 'varchar', length: 200, nullable: false })
   password: string
 
-<<<<<<< Updated upstream
-  @Column({
-    name: 'createdAt',
-    type: 'datetime',
-    nullable: false,
-    default: () => 'now()',
-  })
-=======
   @Column({ name: 'createdAt', type: 'datetime', nullable: false, default: () => 'now()' })
->>>>>>> Stashed changes
   createdAt: Date
 
   @Column({ name: 'deletedAt', type: 'datetime', nullable: true })

@@ -3,13 +3,8 @@
   "semi": false,
   "singleQuote": true,
   "tabWidth": 2,
-<<<<<<< Updated upstream
   "bracketSpacing": true,
   "arrowParens": "always",
-  "semi": false
-}
-=======
   "trailingComma": "all",
   "printWidth": 120
 }
->>>>>>> Stashed changes

@@ -1,15 +1,4 @@
-<<<<<<< Updated upstream
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  Put,
-  Query,
-  Request,
-} from '@nestjs/common'
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Request } from '@nestjs/common'
 import { PublicApi } from 'src/auth/auth.guard'
 import { Board } from '../entities/board.entity'
 import { BoardService } from './board.service'
@@ -27,11 +16,8 @@ export class BoardController {
 
   @PublicApi()
   @Get('/with-query')
-  getBoardWithQuery(
-    @Query('id') id: number,
-    @Request() request,
-  ): Promise<Record<string, any>> {
-    return this.service.getBoardWithQuery(id, request.user)
+  getBoardWithQuery(@Query('id') id: number): Promise<Record<string, any>> {
+    return this.service.getBoardWithQuery(id)
   }
 
   @Get(':id')
@@ -45,11 +31,7 @@ export class BoardController {
   }
 
   @Put(':id')
-  updateBoard(
-    @Param('id') id: number,
-    @Body() dto: UpdateBoardDto,
-    @Request() request,
-  ): Promise<Board> {
+  updateBoard(@Param('id') id: number, @Body() dto: UpdateBoardDto, @Request() request): Promise<Board> {
     return this.service.update(id, dto, request.user)
   }
 

@@ -2,37 +2,19 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { PassportStrategy } from '@nestjs/passport'
 import { InjectRepository } from '@nestjs/typeorm'
 import { ExtractJwt, Strategy } from 'passport-jwt'
-<<<<<<< Updated upstream
-=======
-// import { JWT_SECRET } from "src/config/env";
->>>>>>> Stashed changes
 import { User } from 'src/entities/user.entity'
 import { IsNull, Repository } from 'typeorm'
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-<<<<<<< Updated upstream
-  constructor(
-    @InjectRepository(User) private readonly repository: Repository<User>,
-  ) {
-=======
   constructor(@InjectRepository(User) private readonly repository: Repository<User>) {
->>>>>>> Stashed changes
     super({
       secretOrKey: process.env.ACCESS_JWT_SECRET,
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     })
   }
 
-<<<<<<< Updated upstream
-  async validate(payload: {
-    id: number
-    username: string
-    timestamp: Date
-  }): Promise<User> {
-=======
   async validate(payload: { id: number; username: string; timestamp: Date }): Promise<User> {
->>>>>>> Stashed changes
     const user = await this.repository.findOne({
       where: {
         id: payload.id,

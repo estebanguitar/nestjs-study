@@ -8,8 +8,4 @@ async function bootstrap() {
   app.use(cookieParser())
   await app.listen(3000)
 }
-<<<<<<< Updated upstream
-=======
-
->>>>>>> Stashed changes
 bootstrap()
