@@ -16,16 +16,16 @@ type Algorithms =
   | 'RC4-40'
   | 'RC4-128'
 
-type EncryptOptions = {
+type CryptoOptions = {
   keyHashAlgorithm: HashAlgorithms
   algorithm: Algorithms
   ivSize: number
   outputEncoding: 'base64' | 'hex' | 'utf8'
 }
-type EncType = 'NAME' | 'PASSWORD' | 'RRN' | 'TEL' | 'PHONE' | 'EMAIL' | 'DATE'
+type CryptoType = 'NAME' | 'PASSWORD' | 'RRN' | 'TEL' | 'PHONE' | 'EMAIL' | 'DATE'
 
-class Encrypt {
-  constructor(private readonly options: EncryptOptions) {}
+class Crypto {
+  constructor(private readonly options: CryptoOptions) {}
 
   encrypt(plainText: string, password?: string): string {
     try {
@@ -62,7 +62,7 @@ class Encrypt {
   }
 }
 
-class NameEncrypt extends Encrypt {
+class NameCrypto extends Crypto {
   constructor() {
     super({
       keyHashAlgorithm: 'SHA-256',
@@ -75,7 +75,7 @@ class NameEncrypt extends Encrypt {
   // TODO override encrypt, decrypt method here
 }
 
-class PasswordEncrypt extends Encrypt {
+class PasswordCrypto extends Crypto {
   constructor() {
     super({
       keyHashAlgorithm: 'SHA-256',
@@ -86,7 +86,7 @@ class PasswordEncrypt extends Encrypt {
   }
 }
 
-class RRNEncrypt extends Encrypt {
+class RRNCrypto extends Crypto {
   constructor() {
     super({
       keyHashAlgorithm: 'SHA-256',
@@ -97,7 +97,7 @@ class RRNEncrypt extends Encrypt {
   }
 }
 
-class TelEncrypt extends Encrypt {
+class TelCrypto extends Crypto {
   constructor() {
     super({
       keyHashAlgorithm: 'SHA-256',
@@ -108,7 +108,7 @@ class TelEncrypt extends Encrypt {
   }
 }
 
-class PhoneEncrypt extends Encrypt {
+class PhoneCrypto extends Crypto {
   constructor() {
     super({
       keyHashAlgorithm: 'SHA-256',
@@ -119,7 +119,7 @@ class PhoneEncrypt extends Encrypt {
   }
 }
 
-class EmailEncrypt extends Encrypt {
+class EmailCrypto extends Crypto {
   constructor() {
     super({
       keyHashAlgorithm: 'SHA-256',
@@ -130,7 +130,7 @@ class EmailEncrypt extends Encrypt {
   }
 }
 
-class DateEncrypt extends Encrypt {
+class DateCrypto extends Crypto {
   constructor() {
     super({
       keyHashAlgorithm: 'SHA-256',
@@ -141,16 +141,16 @@ class DateEncrypt extends Encrypt {
   }
 }
 
-export class EncryptFactory {
-  private static readonly nameEncrypt = new NameEncrypt()
-  private static readonly passwordEncrypt = new PasswordEncrypt()
-  private static readonly rrnEncrypt = new RRNEncrypt()
-  private static readonly telEncrypt = new TelEncrypt()
-  private static readonly phoneEncrypt = new PhoneEncrypt()
-  private static readonly emailEncrypt = new EmailEncrypt()
-  private static readonly dateEncrypt = new DateEncrypt()
+export class CryptoFactory {
+  private static readonly nameEncrypt = new NameCrypto()
+  private static readonly passwordEncrypt = new PasswordCrypto()
+  private static readonly rrnEncrypt = new RRNCrypto()
+  private static readonly telEncrypt = new TelCrypto()
+  private static readonly phoneEncrypt = new PhoneCrypto()
+  private static readonly emailEncrypt = new EmailCrypto()
+  private static readonly dateEncrypt = new DateCrypto()
 
-  static getInstance(encType: EncType) {
+  static getInstance(encType: CryptoType) {
     switch (encType) {
       case 'NAME':
         return this.nameEncrypt

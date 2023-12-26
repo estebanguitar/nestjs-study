@@ -6,7 +6,7 @@ import { JwtVerify, Tokens } from 'src/config/config.type'
 import { User } from 'src/entities/user.entity'
 import { IsNull, Repository } from 'typeorm'
 import * as process from 'process'
-import { EncryptFactory } from '../util/crypto.util'
+import { CryptoFactory } from '../util/crypto.util'
 
 @Injectable()
 export class UserService {
@@ -16,7 +16,7 @@ export class UserService {
     @InjectRepository(User) private readonly userRepository: Repository<User>,
     private readonly jwtService: JwtService,
   ) {
-    this.cryptoUtil = EncryptFactory.getInstance('PASSWORD')
+    this.cryptoUtil = CryptoFactory.getInstance('PASSWORD')
   }
 
   async getUser(id: number): Promise<User> {
