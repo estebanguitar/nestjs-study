@@ -6,9 +6,13 @@ import { IsNull, Repository } from 'typeorm'
 
 @Injectable()
 export class ReplyService {
+<<<<<<< Updated upstream
   constructor(
     @InjectRepository(Reply) private readonly repository: Repository<Reply>,
   ) {}
+=======
+  constructor(@InjectRepository(Reply) private readonly repository: Repository<Reply>) {}
+>>>>>>> Stashed changes
 
   async getAll(): Promise<Reply[]> {
     return await this.repository.find({
@@ -20,6 +24,7 @@ export class ReplyService {
       },
     })
   }
+<<<<<<< Updated upstream
   async get(id: number): Promise<Reply> {
     const reply = await this.repository.findOne({
       where: {
@@ -55,6 +60,53 @@ export class ReplyService {
     return await this.repository.save(reply)
   }
   async delete(id: number, user: User): Promise<Reply> {
+=======
+
+  async get(id: number): Promise<Reply> {
+    const reply = await this.repository.findOne({
+      where: {
+        id,
+        deletedAt: IsNull(),
+      },
+      relations: ['board', 'user'],
+    })
+
+    if (reply === null) throw new NotFoundException()
+
+    return reply
+  }
+
+  async insert(data: Reply, user: User): Promise<Reply> {
+    data.userId = user.id
+    data.createdAt = new Date()
+    return await this.repository.save(data)
+  }
+
+  async update(id: number, data: Reply, user: User): Promise<Reply> {
+>>>>>>> Stashed changes
+    const reply = await this.repository.findOne({
+      where: {
+        id,
+        userId: user.id,
+        deletedAt: IsNull(),
+      },
+    })
+
+    if (reply === null) throw new NotFoundException()
+
+<<<<<<< Updated upstream
+    reply.deletedAt = new Date()
+
+    return await this.repository.save(reply)
+  }
+=======
+    reply.content = data.content
+    reply.updatedAt = new Date()
+
+    return await this.repository.save(reply)
+  }
+
+  async delete(id: number, user: User): Promise<Reply> {
     const reply = await this.repository.findOne({
       where: {
         id,
@@ -69,4 +121,5 @@ export class ReplyService {
 
     return await this.repository.save(reply)
   }
+>>>>>>> Stashed changes
 }

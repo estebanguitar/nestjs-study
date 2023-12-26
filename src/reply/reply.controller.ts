@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import {
   Body,
   Controller,
@@ -8,6 +9,9 @@ import {
   Put,
   Request,
 } from '@nestjs/common'
+=======
+import { Body, Controller, Delete, Get, Param, Post, Put, Request } from '@nestjs/common'
+>>>>>>> Stashed changes
 import { Reply } from 'src/entities/reply.entity'
 import { ReplyService } from './reply.service'
 
@@ -31,11 +35,15 @@ export class ReplyController {
   }
 
   @Put(':id')
+<<<<<<< Updated upstream
   put(
     @Param('id') id: number,
     @Body() data: Reply,
     @Request() request,
   ): Promise<Reply> {
+=======
+  put(@Param('id') id: number, @Body() data: Reply, @Request() request): Promise<Reply> {
+>>>>>>> Stashed changes
     return this.replyService.update(id, data, request.user)
   }
 

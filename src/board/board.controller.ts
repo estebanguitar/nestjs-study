@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import {
   Body,
   Controller,
@@ -23,6 +24,7 @@ export class BoardController {
   getBoards(): Promise<Board[]> {
     return this.service.getBoards()
   }
+
   @PublicApi()
   @Get('/with-query')
   getBoardWithQuery(

@@ -20,6 +20,10 @@ export class DBModuleContainer {
       // migrations: [join(dir, (process.env.DATABASE_MIGRATIONS + '.{ts,js}'))],
     }
   }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   static forRoot(dir: string): DynamicModule {
     return TypeOrmModule.forRoot(this.options(dir))
   }

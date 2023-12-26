@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import {
   BaseEntity,
   Column,
@@ -6,6 +7,9 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
+=======
+import { BaseEntity, Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+>>>>>>> Stashed changes
 import { Board } from './board.entity'
 import { User } from './user.entity'
 
@@ -22,7 +26,11 @@ export class Reply extends BaseEntity {
   boardId: number
 
   @JoinColumn({ name: 'userId' })
+<<<<<<< Updated upstream
   @ManyToOne(() => User, (user: User) => user.id)
+=======
+  @ManyToOne(() => User)
+>>>>>>> Stashed changes
   user: User
 
   @Column({ name: 'userId', type: 'bigint', unsigned: true, nullable: false })
@@ -31,12 +39,16 @@ export class Reply extends BaseEntity {
   @Column({ type: 'varchar', length: 2000, nullable: false })
   content: string
 
+<<<<<<< Updated upstream
   @Column({
     name: 'createdAt',
     type: 'datetime',
     nullable: false,
     default: () => 'now()',
   })
+=======
+  @Column({ name: 'createdAt', type: 'datetime', nullable: false, default: () => 'now()' })
+>>>>>>> Stashed changes
   createdAt: Date
 
   @Column({ name: 'updatedAt', type: 'datetime', nullable: true })

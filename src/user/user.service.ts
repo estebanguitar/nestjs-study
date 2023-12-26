@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import {
   HttpException,
   HttpStatus,
@@ -24,12 +25,42 @@ export class UserService {
       relations: ['boards', 'replies´'],
     })
 
+=======
+import { HttpException, HttpStatus, Injectable, UnauthorizedException } from '@nestjs/common'
+import { JwtService } from '@nestjs/jwt'
+import { InjectRepository } from '@nestjs/typeorm'
+import { error } from 'console'
+import { JwtVerify, Tokens } from 'src/config/config.type'
+import { User } from 'src/entities/user.entity'
+import { IsNull, Repository } from 'typeorm'
+import { CryptoUtil } from '../util/crypto.util'
+import * as process from 'process'
+
+@Injectable()
+export class UserService {
+  private readonly cryptoUtil
+
+  constructor(
+    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    private readonly jwtService: JwtService,
+  ) {
+    this.cryptoUtil = new CryptoUtil('SHA-256', 'AES-256-CBC', 16, 'base64')
+  }
+
+  async getUser(id: number): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: { id, deletedAt: IsNull() },
+      // relations: ['boards']
+    })
+
+>>>>>>> Stashed changes
     if (user === null) {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND)
     }
 
     return user
   }
+<<<<<<< Updated upstream
   async getAllUsers(): Promise<[User[], number]> {
     return await this.userRepository.findAndCount({
       where: { deletedAt: IsNull() },
@@ -66,6 +97,44 @@ export class UserService {
 
     const now = new Date().getTime()
 
+=======
+
+  async getAllUsers(): Promise<[User[], number]> {
+    return await this.userRepository.findAndCount({
+      where: { deletedAt: IsNull() },
+    })
+  }
+
+  async signup(username: string, password: string): Promise<User> {
+    const user = await this.userRepository.findOne({
+      where: {
+        username,
+      },
+    })
+
+    if (user !== null) throw new HttpException('Already Exist username', HttpStatus.BAD_REQUEST)
+
+    return await this.userRepository.save(
+      this.userRepository.create({
+        username,
+        password: this.cryptoUtil.encrypt(password),
+        createdAt: new Date(),
+      }),
+    )
+  }
+
+  async signin(username: string, password: string): Promise<Tokens> {
+    const user = await this.userRepository.findOne({
+      where: {
+        username,
+      },
+    })
+
+    if (user === null || this.cryptoUtil.decrypt(user?.password) !== password) throw new UnauthorizedException()
+
+    const now = new Date().getTime()
+
+>>>>>>> Stashed changes
     const payload: JwtVerify = {
       id: user.id,
       username: user.username,
@@ -82,7 +151,11 @@ export class UserService {
     const users = await this.userRepository.find()
 
     users.forEach((u) => {
+<<<<<<< Updated upstream
       u.password = aesEncrypt('1234')
+=======
+      u.password = this.cryptoUtil.encrypt('1234')
+>>>>>>> Stashed changes
       this.userRepository.save(u)
     })
   }
@@ -92,11 +165,19 @@ export class UserService {
       this.jwtService.verify(token, {
         secret: process.env.REFRESH_JWT_SECRET,
       })
+<<<<<<< Updated upstream
     } catch (e) {
       console.error(e.message)
       return false
     }
     return true
+=======
+      return true
+    } catch (e) {
+      error(e.message)
+      return false
+    }
+>>>>>>> Stashed changes
   }
 
   private issueAccessToken(payload: JwtVerify): string {
@@ -104,6 +185,10 @@ export class UserService {
       algorithm: 'HS256',
     })
   }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   private issueRefreshToken(payload: JwtVerify): string {
     return this.jwtService.sign(payload, {
       algorithm: 'HS256',
@@ -111,6 +196,10 @@ export class UserService {
       expiresIn: parseInt(process.env.REFRESH_JWT_EXPIRES),
     })
   }
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
   async refresh(refreshToken: any): Promise<Tokens> {
     if (!this.verify(refreshToken)) throw new UnauthorizedException()
 
