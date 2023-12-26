@@ -34,9 +34,7 @@ class Crypto {
 
       const iv = crypto.randomBytes(this.options.ivSize)
       const cipher = crypto.createCipheriv(this.options.algorithm, keyHash.digest(), iv)
-      const cipherText = cipher.update(Buffer.from(plainText))
-      const cipherFinal = cipher.final()
-      const encrypted = Buffer.concat([iv, cipherText, cipherFinal])
+      const encrypted = Buffer.concat([iv, cipher.update(Buffer.from(plainText)), cipher.final()])
       return encrypted.toString(this.options.outputEncoding)
     } catch (e) {
       console.error(e)
@@ -52,9 +50,7 @@ class Crypto {
       const iv = encryptedBuffer.subarray(0, this.options.ivSize)
       const rest = encryptedBuffer.subarray(this.options.ivSize)
       const decipher = crypto.createDecipheriv(this.options.algorithm, keyHash.digest(), iv)
-      const plainText = decipher.update(rest)
-      const plainFinal = decipher.final()
-      const decrypted = Buffer.concat([plainText, plainFinal])
+      const decrypted = Buffer.concat([decipher.update(rest), decipher.final()])
       return decrypted.toString()
     } catch (e) {
       console.error(e)

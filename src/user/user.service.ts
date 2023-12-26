@@ -5,7 +5,6 @@ import { error } from 'console'
 import { JwtVerify, Tokens } from 'src/config/config.type'
 import { User } from 'src/entities/user.entity'
 import { IsNull, Repository } from 'typeorm'
-import * as process from 'process'
 import { CryptoFactory } from '../util/crypto.util'
 
 @Injectable()
@@ -22,12 +21,13 @@ export class UserService {
   async getUser(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id, deletedAt: IsNull() },
-      // relations: ['boards']
+      relations: {
+        boards: true,
+        replies: true,
+      },
     })
 
-    if (user === null) {
-      throw new HttpException('User not found', HttpStatus.NOT_FOUND)
-    }
+    if (user === null) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
 
     return user
   }
@@ -124,8 +124,6 @@ export class UserService {
       username,
       timestamp: new Date().getTime(),
     }
-
-    //TODO 유저 검증
 
     return {
       accessToken: this.issueAccessToken(payload),
