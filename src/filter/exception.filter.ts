@@ -1,30 +1,31 @@
-import { ArgumentsHost, HttpException } from '@nestjs/common'
-import { Response } from 'express'
-import { DBException } from '../exception/DB.exception'
+import { ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus } from '@nestjs/common'
+import { HttpAdapterHost } from '@nestjs/core'
 
-type ExceptionType = {
-  type: HttpException | DBException
+class ExceptionResponse {
+  constructor(
+    private readonly status: 'success' | 'fail',
+    private readonly message: string,
+    private readonly statusCode: HttpStatus,
+    private readonly path: string,
+    private readonly data?: any,
+  ) {}
 }
 
-export class GlobalExceptionFilter {
-  catch<T extends ExceptionType>(exception: T, host: ArgumentsHost): any {
+@Catch()
+export class GlobalExceptionFilter implements ExceptionFilter<Error> {
+  constructor(private readonly httpAdapterHost: HttpAdapterHost) {}
+
+  catch(exception: Error, host: ArgumentsHost): any {
+    const { httpAdapter } = this.httpAdapterHost
     const context = host.switchToHttp()
-    // const request = context.getRequest<Request>()
-    const response = context.getResponse<Response>()
+    const httpStatus = exception instanceof HttpException ? exception.getStatus() : HttpStatus.INTERNAL_SERVER_ERROR
+    const responseBody = new ExceptionResponse(
+      'fail',
+      exception.message,
+      httpStatus,
+      httpAdapter.getRequestUrl(context.getRequest()),
+    )
 
-    const errorType = this.getErrorType(exception)
-
-    console.log(exception)
-    console.log()
-    // console.log( )
-    response.status(404).json({
-      status: 404,
-      message: '404',
-    })
-  }
-
-  private getErrorType(exception: unknown) {
-    // return instanceof
-    return ''
+    httpAdapter.reply(context.getResponse(), responseBody, httpStatus)
   }
 }
