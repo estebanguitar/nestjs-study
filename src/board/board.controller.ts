@@ -4,10 +4,13 @@ import { Board } from '../entities/board.entity'
 import { BoardService } from './board.service'
 import { CreateBoardDto } from './dto/create-board.dto'
 import { UpdateBoardDto } from './dto/update-board.dto'
+import { LoggerFactory } from '../util/logger'
 
 @Controller('board')
 export class BoardController {
   constructor(private readonly service: BoardService) {}
+
+  log = LoggerFactory.create(BoardController)
 
   @Get()
   getBoards(): Promise<Board[]> {
@@ -17,6 +20,8 @@ export class BoardController {
   @PublicApi()
   @Get('/with-query')
   getBoardWithQuery(@Query('id') id: number): Promise<Record<string, any>> {
+    this.log.debug('getBoardWithQuery info', id)
+    this.log.info('getBoardWithQuery info', id)
     return this.service.getBoardWithQuery(id)
   }
 
