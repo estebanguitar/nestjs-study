@@ -25,20 +25,12 @@ module.exports = class Init1703041717217 {
   }
 
   async down(queryRunner) {
-    await queryRunner.query(
-      `ALTER TABLE \`board\` DROP FOREIGN KEY \`FK_c9951f13af7909d37c0e2aec484\``,
-    )
-    await queryRunner.query(
-      `ALTER TABLE \`reply\` DROP FOREIGN KEY \`FK_e9886d6d04a19413a2f0aac5d7b\``,
-    )
-    await queryRunner.query(
-      `ALTER TABLE \`reply\` DROP FOREIGN KEY \`FK_34d08b0d948a9b12f712de60886\``,
-    )
+    await queryRunner.query(`ALTER TABLE \`board\` DROP FOREIGN KEY \`FK_c9951f13af7909d37c0e2aec484\``)
+    await queryRunner.query(`ALTER TABLE \`reply\` DROP FOREIGN KEY \`FK_e9886d6d04a19413a2f0aac5d7b\``)
+    await queryRunner.query(`ALTER TABLE \`reply\` DROP FOREIGN KEY \`FK_34d08b0d948a9b12f712de60886\``)
     await queryRunner.query(`DROP TABLE \`board\``)
     await queryRunner.query(`DROP TABLE \`reply\``)
-    await queryRunner.query(
-      `DROP INDEX \`IDX_78a916df40e02a9deb1c4b75ed\` ON \`user\``,
-    )
+    await queryRunner.query(`DROP INDEX \`IDX_78a916df40e02a9deb1c4b75ed\` ON \`user\``)
     await queryRunner.query(`DROP TABLE \`user\``)
   }
 }

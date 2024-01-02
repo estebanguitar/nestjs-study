@@ -1,7 +1,7 @@
 import { Exception, ExceptionOptions } from './exception'
 
-export class DatabaseException extends Exception {
+export class HTTPException extends Exception {
   constructor(message: string, options?: ExceptionOptions) {
-    super(message, 'DatabaseException', options)
+    super(message, 'HTTPException', options)
   }
 }

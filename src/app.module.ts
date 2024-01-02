@@ -7,8 +7,10 @@ import { ReplyModule } from './reply/reply.module'
 import { UserModule } from './user/user.module'
 import { FileModule } from './file/file.module'
 import { GlobalExceptionFilter } from './filter/exception.filter'
-import { ExceptController } from './except/except.controller';
-import { ExceptModule } from './except/except.module';
+import { ExceptController } from './except/except.controller'
+import { ExceptModule } from './except/except.module'
+import { ExceptionModule } from './exception/exception.module'
+import { AuditModule } from './audit/audit.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ExceptModule } from './except/except.module';
     ReplyModule,
     FileModule,
     ExceptModule,
+    ExceptionModule,
+    AuditModule,
   ],
   controllers: [ExceptController],
   providers: [
