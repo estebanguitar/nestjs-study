@@ -1,6 +1,5 @@
 import { Module } from '@nestjs/common'
 import { APP_FILTER, APP_GUARD } from '@nestjs/core'
-import { JwtAuthGuard } from './auth/auth.guard'
 import { BoardModule } from './board/board.module'
 import { ConfigModuleContainer, DBModuleContainer, JwtModuleContainer } from './config/module.container'
 import { ReplyModule } from './reply/reply.module'
@@ -10,7 +9,8 @@ import { GlobalExceptionFilter } from './filter/exception.filter'
 import { ExceptController } from './except/except.controller'
 import { ExceptModule } from './except/except.module'
 import { ExceptionModule } from './exception/exception.module'
-import { AuditModule } from './audit/audit.module';
+import { AuditModule } from './audit/audit.module'
+import { JwtAuthGuard } from './auth/auth.guard'
 
 @Module({
   imports: [
@@ -24,6 +24,7 @@ import { AuditModule } from './audit/audit.module';
     ExceptModule,
     ExceptionModule,
     AuditModule,
+    // RequestContextModule,
   ],
   controllers: [ExceptController],
   providers: [

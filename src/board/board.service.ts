@@ -5,6 +5,7 @@ import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/co
 import { InjectRepository } from '@nestjs/typeorm'
 import { IsNull, Not, Repository } from 'typeorm'
 import { User } from '../entities/user.entity'
+import { RequestContext } from '../request-context'
 
 @Injectable()
 export class BoardService {
@@ -38,7 +39,7 @@ export class BoardService {
       this.repository.create({
         title,
         content,
-        user,
+        userId: user.id,
         createdAt: new Date(),
       }),
     )
@@ -46,7 +47,6 @@ export class BoardService {
 
   async update(id: number, dto: UpdateBoardDto, user: User): Promise<Board> {
     const { title, content } = dto
-
     const board = await this.repository.findOne({
       where: {
         id,
@@ -56,12 +56,16 @@ export class BoardService {
 
     if (board === null) throw new NotFoundException()
     if (board.userId !== user.id) throw new UnauthorizedException()
+    RequestContext.before = JSON.parse(JSON.stringify(board))
 
     board.title = title
     board.content = content
     board.updatedAt = new Date()
 
-    return await this.repository.save(board)
+    const updatedBoard = await this.repository.save(board)
+    RequestContext.after = { updatedBoard }
+
+    return updatedBoard
   }
 
   async delete(id: number, user: User): Promise<Board> {

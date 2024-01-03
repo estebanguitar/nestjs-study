@@ -14,7 +14,7 @@ export class Audit extends BaseEntity {
   @ManyToOne(() => User)
   user: User
 
-  method: HttpMethod
+  method: string
 
   @CreateDateColumn({ type: 'datetime', name: 'createdAt', nullable: false })
   createdAt: Date

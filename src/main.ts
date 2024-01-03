@@ -9,7 +9,6 @@ function envSetup() {
     }
     const env = JSON.parse(data)
     Object.keys(env).forEach((key) => {
-      // console.log(key, env[key])
       process.env[key] = env[key]
     })
     import('./app.main')
