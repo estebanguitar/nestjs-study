@@ -8,5 +8,5 @@ import { mid } from './request-context'
   app.setGlobalPrefix('/api')
   app.use(mid)
   app.use(cookieParser())
-  await app.listen(3000)
+  await app.listen(3001)
 })()

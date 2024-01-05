@@ -34,18 +34,16 @@ export class FileController {
   }
 
   @Post('upload')
-  @UseInterceptors(FileInterceptor('file'))
-  uploadFile(@UploadedFile() file: Express.Multer.File): string {
-    console.log('🚀 ~ file: file.controller.ts:23 ~ FileController ~ uploadFile ~ file:', file)
+  @UseInterceptors(FileInterceptor('upload'))
+  uploadFile(@UploadedFile() data: Express.Multer.File): string {
+    // console.log('🚀 ~ file: file.controller.ts:23 ~ FileController ~ uploadFile ~ file:', file)
     return null
   }
 
   @Post('upload/multiple')
-  @UseInterceptors(FilesInterceptor('file'))
-  uploadMultipleFiles(@UploadedFiles() files: Array<Express.Multer.File>): string {
-    files.forEach((element) => {
-      console.log('🚀 ~ file: file.controller.ts:33 ~ FileController ~ uploadMultipleFiles ~ element:', element)
-    })
+  @UseInterceptors(FilesInterceptor('upload'))
+  uploadMultipleFiles(@UploadedFiles() list: Array<Express.Multer.File>): string {
+    // console.log('🚀 ~ file: file.controller.ts:33 ~ FileController ~ uploadMultipleFiles ~ element:', files)
     return null
   }
 
