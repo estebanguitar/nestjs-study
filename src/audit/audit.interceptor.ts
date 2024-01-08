@@ -27,13 +27,13 @@ export class AuditInterceptor implements NestInterceptor {
 
     // console.log('interceptor before', before)
     // console.log('interceptor after', after)
-    console.log(request.file)
+    // console.log(request.file)
     // console.log(request.files.length)
     // for (const i in Object.keys(request.files)) {
     //   console.log(request.files[i])
     // }
     const files = request.files
-    console.log(files)
+    // console.log(files)
     if (files != null) {
       const filenames: string[] = []
       for (const i in Object.keys(files)) {
