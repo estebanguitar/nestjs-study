@@ -10,6 +10,13 @@ import { UserService } from './user.service'
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  // TODO
+  // @Post('/generate/qr')
+  // @PrivateApi()
+  // generateQr(@Req() request): Promise<{ imageUrl: string }> {
+  //   return this.userService.generateQr(request.user)
+  // }
+
   @Get()
   @PrivateApi()
   getAllUsers(): Promise<[User[], number]> {
@@ -24,8 +31,8 @@ export class UserController {
 
   @Post('signup')
   signup(@Body() dto: UserSignDto): Promise<User> {
-    const { username, password } = dto
-    return this.userService.signup(username, password)
+    const { username, password, email } = dto
+    return this.userService.signup(username, password, email)
   }
 
   @Post('signin')
@@ -44,4 +51,10 @@ export class UserController {
   changePassword(): Promise<void> {
     return this.userService.changePassword()
   }
+
+  // TODO
+  // @Get('tmp/tmp')
+  // tmp(@Req() user: User): Promise<{ secret: string; otpAuthUrl: string }> {
+  //   return this.userService.generateTwoFactorAuthSecret(user)
+  // }
 }

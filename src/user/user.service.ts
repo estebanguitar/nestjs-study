@@ -18,6 +18,19 @@ export class UserService {
     this.cryptoUtil = CryptoFactory.getInstance('PASSWORD')
   }
 
+  // TODO
+  // generateTwoFactorAuthSecret = async (user: User): Promise<{ secret: string; otpAuthUrl: string }> => {
+  //   const secret = authenticator.generateSecret()
+  //   const otpAuthUrl = authenticator.keyuri(user.email, 'ESTEBAN_NEST_BOARD', secret)
+  //
+  //   await this.setTwoFactorAUthSecret(user.id, secret)
+  //
+  //   return {
+  //     secret,
+  //     otpAuthUrl,
+  //   }
+  // }
+
   async getUser(id: number): Promise<User> {
     const user = await this.userRepository.findOne({
       where: { id, deletedAt: IsNull() },
@@ -38,7 +51,7 @@ export class UserService {
     })
   }
 
-  async signup(username: string, password: string): Promise<User> {
+  async signup(username: string, password: string, email: string): Promise<User> {
     const user = await this.userRepository.findOne({
       where: {
         username,
@@ -50,6 +63,7 @@ export class UserService {
     return await this.userRepository.save(
       this.userRepository.create({
         username,
+        email,
         password: this.cryptoUtil.encrypt(password),
         createdAt: new Date(),
       }),
@@ -130,4 +144,21 @@ export class UserService {
       refreshToken: this.issueRefreshToken(payload),
     }
   }
+
+  private setTwoFactorAUthSecret = async (id: number, secret: string): Promise<User> => {
+    const user = await this.userRepository.findOne({ where: { id } })
+
+    if (user === null) throw new HttpException('User not found', HttpStatus.NOT_FOUND)
+
+    user.twoFactorAuthSecret = secret
+
+    return await this.userRepository.save(user)
+  }
+
+  // TOOD
+  // async generateQr(user: User): Promise<{ imageUrl: string }> {
+  //   const secret = await this.generateTwoFactorAuthSecret(user)
+  //   const imageUrl = await toDataURL(secret.otpAuthUrl)
+  //   return { imageUrl }
+  // }
 }
